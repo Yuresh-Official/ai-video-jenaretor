@@ -3,126 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart AI Video Generator | Live</title>
+    <title>Yuresh AI Video Pro | Sinhala to AI</title>
     <style>
-        :root { --primary: #8a2be2; --bg: #0a0a0a; --card: #161618; }
-        body { background: var(--bg); color: #fff; font-family: -apple-system, sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        :root { --accent: #00ff88; --bg: #050505; --glass: rgba(255, 255, 255, 0.05); }
+        body { 
+            background: var(--bg); color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh;
+        }
         
-        .container { width: 90%; max-width: 420px; background: var(--card); border-radius: 25px; padding: 25px; border: 1px solid rgba(255,255,255,0.1); text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
-        h1 { font-size: 22px; margin-bottom: 5px; background: linear-gradient(45deg, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .container { 
+            width: 90%; max-width: 400px; background: var(--glass); backdrop-filter: blur(15px); 
+            border-radius: 28px; padding: 25px; border: 1px solid rgba(255,255,255,0.1); 
+            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        }
         
-        .input-box { background: rgba(0,0,0,0.3); border: 1px solid #333; border-radius: 15px; padding: 15px; margin: 20px 0 10px; }
-        textarea { width: 100%; height: 80px; background: none; border: none; color: #fff; outline: none; resize: none; font-size: 16px; }
-        
-        #transDisplay { font-size: 11px; color: #666; text-align: left; margin-bottom: 15px; min-height: 14px; }
+        h1 { font-size: 22px; margin-bottom: 5px; letter-spacing: -0.5px; font-weight: 800; }
+        .tag { font-size: 10px; color: var(--accent); font-weight: bold; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 1px; }
 
-        .gen-btn { width: 100%; padding: 15px; border-radius: 15px; border: none; background: var(--primary); color: #fff; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .gen-btn:disabled { background: #444; cursor: not-allowed; }
+        .input-area { 
+            background: rgba(0,0,0,0.3); border: 1px solid #222; border-radius: 18px; 
+            padding: 15px; margin-bottom: 10px; transition: 0.3s;
+        }
+        .input-area:focus-within { border-color: var(--accent); }
+        textarea { 
+            width: 100%; height: 75px; background: none; border: none; 
+            color: #fff; outline: none; resize: none; font-size: 15px;
+        }
 
-        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 15px; margin-top: 25px; border: 1px dashed #333; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        video { width: 100%; height: 100%; object-fit: cover; }
+        #transPreview { font-size: 11px; color: #555; text-align: left; margin-bottom: 15px; min-height: 14px; font-style: italic; }
 
-        /* Loader */
-        .loader { display: none; width: 30px; height: 30px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        .gen-btn { 
+            width: 100%; padding: 15px; border-radius: 15px; border: none; 
+            background: #fff; color: #000; font-weight: 800; cursor: pointer; 
+            transition: 0.3s; font-size: 15px;
+        }
+        .gen-btn:active { transform: scale(0.97); }
+        .gen-btn:disabled { background: #222; color: #444; cursor: not-allowed; }
+
+        .video-wrapper { 
+            width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 18px; 
+            margin-top: 25px; border: 1px solid #111; display: flex; 
+            align-items: center; justify-content: center; position: relative; overflow: hidden;
+        }
+        video { width: 100%; height: 100%; object-fit: cover; display: none; }
+
+        /* Loader Animation */
+        .loader { display: none; width: 35px; height: 35px; border: 3px solid rgba(255,255,255,0.05); border-top: 3px solid var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        .dl-btn { 
+            display: none; margin-top: 15px; color: var(--accent); 
+            text-decoration: none; font-size: 13px; font-weight: 600;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Smart AI Video Gen</h1>
-        <p style="font-size: 12px; color: #888;">සිංහලෙන් ලියන්න, ඉංග්‍රීසියෙන් වීඩියෝවක් ගන්න</p>
+        <div class="tag">Smart AI Video Engine</div>
+        <h1>Yuresh AI Video Pro</h1>
+        <p style="color: #666; font-size: 12px; margin-bottom: 20px;">සිංහලෙන් විස්තරය ලියා වීඩියෝවක් සාදාගන්න</p>
 
-        <div class="input-box">
-            <textarea id="promptInp" placeholder="උදා: 'වැස්ස වෙලාවක කොළඹ නගරය පෙනෙන හැටි'"></textarea>
+        <div class="input-area">
+            <textarea id="promptInp" placeholder="උදා: මීදුම සහිත කඳු වැටියක්..."></textarea>
         </div>
-        <div id="transDisplay"></div>
+        <div id="transPreview">Translation will appear here...</div>
 
-        <button id="genBtn" class="gen-btn" onclick="startProcess()">වීඩියෝව නිර්මාණය කරන්න 🚀</button>
+        <button id="genBtn" class="gen-btn" onclick="startGeneration()">නිර්මාණය කරන්න 🚀</button>
 
-        <div class="video-box" id="outputArea">
-            <div class="loader" id="loader"></div>
-            <span id="waitText" style="color:#444; font-size:13px;">වීඩියෝව මෙතැන පෙනේවි</span>
-            <video id="outVideo" controls style="display:none;"></video>
+        <div class="video-wrapper">
+            <div class="loader" id="spinner"></div>
+            <span id="hintText" style="color: #222; font-size: 12px;">වීඩියෝව මෙතැන දිස්වේවි</span>
+            <video id="outVid" controls playsinline></video>
         </div>
+
+        <a id="dlLink" class="dl-btn" href="#" target="_blank">Download Video 📥</a>
     </div>
 
     <script>
-        const REPLICATE_API_TOKEN = "R8_1Xdy0jlYZXoWXK7EBBE2TfoJupFCA0g1hQBWF";
+        // ඔයා ලබාදුන් Replicate API Token එක
+        const API_TOKEN = "R8_1Xdy0jlYZXoWXK7EBBE2TfoJupFCA0g1hQBWF";
 
-        async function translate(text) {
-            try {
-                const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=si&tl=en&dt=t&q=${encodeURI(text)}`);
-                const data = await res.json();
-                return data[0][0][0];
-            } catch (e) { return text; }
-        }
-
-        async function startProcess() {
-            const promptInp = document.getElementById('promptInp');
+        async function startGeneration() {
+            const promptInput = document.getElementById('promptInp').value;
             const btn = document.getElementById('genBtn');
-            const loader = document.getElementById('loader');
-            const waitText = document.getElementById('waitText');
-            const video = document.getElementById('outVideo');
-            const transDisplay = document.getElementById('transDisplay');
+            const spinner = document.getElementById('spinner');
+            const video = document.getElementById('outVid');
+            const hint = document.getElementById('hintText');
+            const preview = document.getElementById('transPreview');
+            const dlLink = document.getElementById('dlLink');
 
-            if(!promptInp.value) return alert("කරුණාකර යමක් ලියන්න!");
+            if(!promptInput.trim()) return alert("කරුණාකර සිංහලෙන් යමක් ලියන්න!");
 
+            // UI එක සූදානම් කිරීම
             btn.disabled = true;
-            loader.style.display = "block";
-            waitText.innerText = "පරිවර්තනය වෙමින්...";
+            spinner.style.display = "block";
+            hint.style.display = "none";
             video.style.display = "none";
+            dlLink.style.display = "none";
+            preview.innerText = "පරිවර්තනය වෙමින් පවතියි...";
 
-            // 1. සිංහල -> ඉංග්‍රීසි
-            const englishPrompt = await translate(promptInp.value);
-            transDisplay.innerText = "English: " + englishPrompt;
-            waitText.innerText = "AI එක වීඩියෝව හදමින් පවතියි...";
-
-            // 2. Replicate API එකට යැවීම
             try {
-                // සටහන: Browser එකේ ඉදන් කෙලින්ම Replicate වලට Fetch කිරීමේදී CORS Error එකක් එන්න පුළුවන්. 
-                // ඒ නිසා අපි 'Proxy' එකක් පාවිච්චි කරනවා.
-                const response = await fetch("https://api.replicate.com/v1/predictions", {
+                // 1. Google Translate URL එක හරහා සිංහල -> ඉංග්‍රීසි කිරීම
+                const transUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=si&tl=en&dt=t&q=${encodeURIComponent(promptInput)}`;
+                const transRes = await fetch(transUrl);
+                const transData = await transRes.json();
+                
+                // AI එකට හොඳට තේරෙන විදියට Prompt එක සකස් කිරීම
+                const englishPrompt = `A high-quality, cinematic 4k video of ${transData[0][0][0]}, realistic motion.`;
+                preview.innerText = "AI Prompt: " + englishPrompt;
+
+                // 2. Replicate API එකට වීඩියෝව හදන්න ඉල්ලීමක් යැවීම
+                const aiResponse = await fetch("https://api.replicate.com/v1/predictions", {
                     method: "POST",
                     headers: {
-                        "Authorization": `Token ${REPLICATE_API_TOKEN}`,
-                        "Content-Type": "application/json",
+                        "Authorization": `Token ${API_TOKEN}`,
+                        "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        version: "3f04018850fe2a3f9e210a823ad74826774ca2d0ad8d7979f712716f6bbd6d7c", // Stable Video Diffusion
+                        version: "3f04018850fe2a3f9e210a823ad74826774ca2d0ad8d7979f712716f6bbd6d7c",
                         input: { prompt: englishPrompt }
                     })
                 });
 
-                let prediction = await response.json();
-                const predictionId = prediction.id;
-
-                // 3. වීඩියෝ එක හැදෙනකම් චෙක් කිරීම (Polling)
+                const prediction = await aiResponse.json();
+                
+                // 3. වීඩියෝව සාදා නිමවන තෙක් Status එක පරීක්ෂා කිරීම (Polling)
                 const checkStatus = setInterval(async () => {
-                    const statusRes = await fetch(`https://api.replicate.com/v1/predictions/${predictionId}`, {
-                        headers: { "Authorization": `Token ${REPLICATE_API_TOKEN}` }
+                    const statusRes = await fetch(`https://api.replicate.com/v1/predictions/${prediction.id}`, {
+                        headers: { "Authorization": `Token ${API_TOKEN}` }
                     });
-                    const statusData = await statusRes.json();
+                    const data = await statusRes.json();
 
-                    if (statusData.status === "succeeded") {
+                    if(data.status === "succeeded") {
                         clearInterval(checkStatus);
-                        loader.style.display = "none";
-                        video.src = statusData.output[0];
+                        spinner.style.display = "none";
+                        video.src = data.output[0];
                         video.style.display = "block";
+                        dlLink.href = data.output[0];
+                        dlLink.style.display = "inline-block";
                         btn.disabled = false;
-                    } else if (statusData.status === "failed") {
+                        preview.innerText = "සාර්ථකව නිම විය! ✨";
+                    } else if(data.status === "failed") {
                         clearInterval(checkStatus);
-                        alert("වීඩියෝව සෑදීම අසාර්ථක විය.");
+                        alert("වීඩියෝව සැකසීම අසාර්ථකයි. නැවත උත්සාහ කරන්න.");
                         btn.disabled = false;
-                        loader.style.display = "none";
+                        spinner.style.display = "none";
                     }
-                }, 3000);
+                }, 4000); // තත්පර 4කට වරක් පරීක්ෂා කරයි
 
             } catch (err) {
                 console.error(err);
-                alert("සර්වර් එකේ දෝෂයක්!");
+                alert("දෝෂයක් සිදුවිය! API Credits පරීක්ෂා කරන්න.");
                 btn.disabled = false;
-                loader.style.display = "none";
+                spinner.style.display = "none";
             }
         }
     </script>
