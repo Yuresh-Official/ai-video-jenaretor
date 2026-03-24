@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Yuresh AI Pro | Ultra Fast</title>
+    <title>YURESH AI PRO | Dashboard</title>
     <style>
-        :root { --accent: #00ff88; --bg: #000000; }
+        :root { --accent: #00ff88; --bg: #000000; --card: #111111; }
 
-        /* අකුරු කොපි කිරීම සහ සිලෙක්ට් කිරීම සම්පූර්ණයෙන්ම Lock කිරීම */
+        /* Security: අකුරු කොපි කිරීම සහ සිලෙක්ට් කිරීම Lock කිරීම */
         * {
             -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
             user-select: none;
             -webkit-touch-callout: none;
             box-sizing: border-box;
@@ -19,133 +17,157 @@
         }
 
         body { 
-            background: var(--bg); color: #fff; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background: var(--bg); color: #fff; font-family: 'Segoe UI', Roboto, sans-serif; 
             margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; 
-            height: 100vh; width: 100vw; overflow: hidden; /* Scroll Lock */
-            touch-action: none; /* පේජ් එක එහා මෙහා වීම වැලැක්වීමට */
+            height: 100vh; overflow: hidden; touch-action: none;
         }
         
         .app-container { 
-            width: 92%; max-width: 420px; background: rgba(20, 20, 20, 0.8); 
-            backdrop-filter: blur(30px); border-radius: 35px; padding: 30px; 
-            border: 1px solid rgba(255,255,255,0.08); text-align: center;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.9);
+            width: 92%; max-width: 420px; background: var(--card); 
+            border-radius: 35px; padding: 25px; border: 1px solid #222; 
+            text-align: center; box-shadow: 0 40px 100px rgba(0,0,0,0.8);
         }
 
-        h1 { font-size: 20px; font-weight: 900; letter-spacing: -0.5px; margin: 0 0 5px 0; color: #fff; }
-        .status-bar { font-size: 10px; color: var(--accent); font-weight: 700; text-transform: uppercase; margin-bottom: 25px; opacity: 0.8; }
+        /* Balance Badge */
+        .credit-badge {
+            background: rgba(0, 255, 136, 0.1); color: var(--accent);
+            padding: 6px 16px; border-radius: 14px; font-size: 11px; font-weight: 800;
+            display: inline-block; margin-bottom: 15px; border: 1px solid rgba(0, 255, 136, 0.2);
+        }
 
-        .input-group { background: #111; border: 1px solid #222; border-radius: 20px; padding: 15px; margin-bottom: 15px; }
+        h1 { font-size: 20px; font-weight: 900; margin: 0 0 20px 0; letter-spacing: -0.5px; }
+
+        .input-group { background: #000; border: 1px solid #222; border-radius: 20px; padding: 15px; margin-bottom: 15px; }
         
-        /* ටයිප් කරන කොටසට පමණක් Selection ඉඩ දීම */
+        /* ටයිප් කිරීමට පමණක් අවසර දීම */
         textarea { 
-            width: 100%; height: 70px; background: none; border: none; 
-            color: #fff; outline: none; resize: none; font-size: 15px; font-family: inherit;
+            width: 100%; height: 60px; background: none; border: none; 
+            color: #fff; outline: none; resize: none; font-size: 15px;
             user-select: text !important; -webkit-user-select: text !important;
-            touch-action: auto;
         }
 
         .action-btn { 
             width: 100%; padding: 18px; border-radius: 20px; border: none; 
             background: var(--accent); color: #000; font-weight: 800; 
-            cursor: pointer; font-size: 15px; transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer; font-size: 15px; transition: 0.2s;
         }
-        .action-btn:active { transform: scale(0.96); opacity: 0.9; }
-        .action-btn:disabled { background: #222; color: #555; cursor: not-allowed; transform: none; }
+        .action-btn:disabled { background: #222; color: #555; cursor: not-allowed; }
 
-        .preview-area { 
+        /* Progress Bar */
+        .progress-container { 
+            width: 100%; height: 5px; background: #1a1a1a; 
+            margin-top: 20px; border-radius: 10px; display: none; overflow: hidden; 
+        }
+        .progress-bar { width: 0%; height: 100%; background: var(--accent); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        #status-text { font-size: 10px; color: #666; margin-top: 8px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+
+        .preview-box { 
             width: 100%; aspect-ratio: 16/9; background: #080808; border-radius: 22px; 
-            margin-top: 25px; border: 1px solid #1a1a1a; display: flex; 
+            margin-top: 15px; border: 1px solid #1a1a1a; display: flex; 
             align-items: center; justify-content: center; position: relative; overflow: hidden;
         }
         
         video { width: 100%; height: 100%; border-radius: 22px; display: none; object-fit: cover; }
-
-        /* Loader Animation */
-        .spinner { 
-            display: none; width: 35px; height: 35px; border: 3px solid rgba(255,255,255,0.05); 
-            border-top: 3px solid var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; 
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
     <div class="app-container">
+        <div id="creditInfo" class="credit-badge">LOADING BALANCE...</div>
         <h1>YURESH AI PRO</h1>
-        <div class="status-bar">Turbo Speed • No-Zoom Active</div>
 
         <div class="input-group">
-            <textarea id="promptInp" placeholder="ඔබට අවශ්‍ය දේ සිංහලෙන් විස්තර කරන්න..."></textarea>
+            <textarea id="promptInp" placeholder="සිංහලෙන් විස්තර කරන්න..."></textarea>
         </div>
 
-        <button id="genBtn" class="action-btn" onclick="processAI()">Generate Turbo Video ⚡</button>
+        <button id="genBtn" class="action-btn" onclick="startGeneration()">Generate Turbo Video ⚡</button>
 
-        <div class="preview-area">
-            <div class="spinner" id="loader"></div>
-            <span id="hint" style="color: #222; font-size: 11px; font-weight: 600;">වීඩියෝව මෙතැනට</span>
-            <video id="videoPlayer" controls autoplay loop playsinline></video>
+        <div class="progress-container" id="progCont">
+            <div class="progress-bar" id="progBar"></div>
+        </div>
+        <div id="status-text">Ready to Create</div>
+
+        <div class="preview-box">
+            <video id="videoOut" controls autoplay loop playsinline></video>
+            <div id="hintText" style="color: #1a1a1a; font-size: 12px; font-weight: 800;">VIDEO AREA</div>
         </div>
     </div>
 
     <script>
-        async function processAI() {
+        // Balance එක Update කිරීම
+        async function fetchAccount() {
+            try {
+                const res = await fetch('/api/status?type=account');
+                const data = await res.json();
+                document.getElementById('creditInfo').innerText = `BALANCE: $${data.balance || '0.00'}`;
+            } catch(e) { document.getElementById('creditInfo').innerText = "BALANCE: N/A"; }
+        }
+        fetchAccount();
+
+        async function startGeneration() {
             const prompt = document.getElementById('promptInp').value;
             const btn = document.getElementById('genBtn');
-            const loader = document.getElementById('loader');
-            const video = document.getElementById('videoPlayer');
-            const hint = document.getElementById('hint');
+            const bar = document.getElementById('progBar');
+            const cont = document.getElementById('progCont');
+            const video = document.getElementById('videoOut');
+            const status = document.getElementById('status-text');
+            const hint = document.getElementById('hintText');
 
-            if(!prompt.trim()) return;
+            if(!prompt.trim()) return alert("සිංහලෙන් යමක් ලියන්න!");
 
-            // සයිට් එක රීෆ්‍රෙෂ් නොවී UI එක Update කිරීම
             btn.disabled = true;
-            btn.innerText = "නිර්මාණය කරමින්...";
-            loader.style.display = "block";
+            cont.style.display = "block";
+            bar.style.width = "10%";
+            status.innerText = "Translating...";
             video.style.display = "none";
             hint.style.display = "none";
 
             try {
-                // 1. Instant Translation
+                // 1. Google Translation
                 const tRes = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=si&tl=en&dt=t&q=${encodeURIComponent(prompt)}`);
                 const tData = await tRes.json();
-                const englishText = tData[0][0][0] + ", ultra realistic, cinematic lighting, 4k resolution";
+                const englishText = tData[0][0][0] + ", realistic, 4k, smooth motion";
 
-                // 2. Server Request
+                bar.style.width = "30%";
+                status.innerText = "Requesting AI...";
+
+                // 2. Start Video Prediction
                 const response = await fetch("/api/generate", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ input: { prompt: englishText } })
                 });
-
                 const task = await response.json();
-                
-                // 3. Fast Polling (තත්පර 2කට වරක් පරීක්ෂා කරයි)
-                const checker = setInterval(async () => {
-                    const statusRes = await fetch(`/api/status?id=${task.id}`);
-                    const statusData = await statusRes.json();
 
-                    if(statusData.status === "succeeded") {
-                        clearInterval(checker);
-                        loader.style.display = "none";
-                        video.src = statusData.output[0];
+                let currentProg = 30;
+                const poll = setInterval(async () => {
+                    const sRes = await fetch(`/api/status?id=${task.id}`);
+                    const sData = await sRes.json();
+
+                    if(currentProg < 92) currentProg += 4;
+                    bar.style.width = currentProg + "%";
+                    status.innerText = `Status: ${sData.status}...`;
+
+                    if(sData.status === "succeeded") {
+                        clearInterval(poll);
+                        bar.style.width = "100%";
+                        status.innerText = "Success! ✨";
+                        video.src = sData.output[0];
                         video.style.display = "block";
                         btn.disabled = false;
-                        btn.innerText = "Generate Turbo Video ⚡";
-                    } else if(statusData.status === "failed") {
-                        clearInterval(checker);
-                        alert("Error! නැවත උත්සාහ කරන්න.");
+                        fetchAccount(); // Balance එක අලුත් කිරීම
+                    } else if(sData.status === "failed") {
+                        clearInterval(poll);
+                        alert("AI Generation Failed!");
                         btn.disabled = false;
-                        btn.innerText = "Generate Turbo Video ⚡";
-                        loader.style.display = "none";
+                        status.innerText = "Failed";
                     }
-                }, 2000); 
+                }, 2500);
 
             } catch(e) {
-                console.error(e);
+                alert("Error occurred!");
                 btn.disabled = false;
-                loader.style.display = "none";
-                btn.innerText = "Generate Turbo Video ⚡";
             }
         }
     </script>
