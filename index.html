@@ -6,8 +6,26 @@
     <title>YURESH x ISHARA BEAST MODE</title>
     <style>
         :root { --accent: #ff0000; --bg: #000; --card: #111; }
-        * { box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: #fff; margin: 0; text-align: center; padding: 15px; overflow-x: hidden; }
+        
+        /* කොපි කිරීම සහ සිලෙක්ට් කිරීම වැලැක්වීමට */
+        * { 
+            box-sizing: border-box; 
+            font-family: 'Inter', sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none; /* iOS Safari */
+            -ms-user-select: none;     /* Internet Explorer/Edge */
+            user-select: none;         /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
+        }
+
+        body { 
+            background: var(--bg); 
+            color: #fff; 
+            margin: 0; 
+            text-align: center; 
+            padding: 15px; 
+            overflow-x: hidden; 
+            touch-action: pan-y; /* ඇඟිලි දෙකෙන් ලොකු කිරීම (Pinch zoom) බ්ලොක් කිරීමට */
+        }
         
         .container { max-width: 400px; margin: auto; }
 
@@ -55,7 +73,7 @@
         .footer { margin-top: 30px; font-size: 10px; color: #333; font-weight: bold; }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;" onselectstart="return false;">
 
     <div class="container">
         <div class="animation-box">
@@ -94,46 +112,32 @@
             </div>
         </div>
 
-        <p style="font-size: 11px; color: #444; margin-top: 15px;">
-            * දිනකට ඩිෆ් 4 බැගින් ඉලක්කය වැඩි වේ.
-        </p>
-
         <div class="footer">
             DEVELOPED BY YURESH OFFICIAL | NARAMMALA
         </div>
     </div>
 
     <script>
-        // Challenge Start Date (YYYY-MM-DD)
+        // චැලේන්ජ් එක පටන් ගත් දිනය (මාර්තු 25)
         const start = new Date("2026-03-25"); 
         const now = new Date();
         const diff = Math.floor((now - start) / (1000 * 60 * 60 * 24)) + 1;
 
-        // Current Day (Limit 1 to 60)
-        let day = diff;
-        if (day < 1) day = 1;
-        if (day > 60) day = 60;
-
-        // Formula: Start 20, add 4 every day
+        let day = diff < 1 ? 1 : (diff > 60 ? 60 : diff);
         const pushups = 20 + (day - 1) * 4;
 
         document.getElementById('day-display').innerText = "DAY " + day;
         document.getElementById('target-display').innerText = pushups;
 
-        // Progress calculation
         const percent = Math.round((day / 60) * 100);
         document.getElementById('pb').style.width = percent + "%";
         document.getElementById('prog-text').innerText = percent + "% OF 60 DAYS DONE";
 
-        // Save and Load logic
         const storageKey = "beast_mode_day_" + day;
 
         function saveStatus(user) {
             const isChecked = document.getElementById('check-' + user).checked;
             localStorage.setItem(storageKey + "_" + user, isChecked);
-            if(isChecked) {
-                // සින්දුවක් වගේ ශබ්දයක් හෝ ඇලර්ට් එකක් අවශ්‍ය නම් මෙතනට දාන්න පුළුවන්
-            }
         }
 
         function loadStatus() {
@@ -142,6 +146,13 @@
         }
 
         window.onload = loadStatus;
+
+        // ඇඟිලි දෙකෙන් Zoom කිරීම (Pinch) තවදුරටත් වැලැක්වීමට Script එකක්
+        document.addEventListener('touchstart', function (event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
     </script>
 </body>
 </html>
