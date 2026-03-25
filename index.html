@@ -3,101 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>YURESH 60-DAY BEAST MODE</title>
+    <title>YURESH x ISHARA BEAST MODE</title>
     <style>
         :root { --accent: #ff0000; --bg: #000; --card: #111; }
-        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: #fff; margin: 0; text-align: center; padding: 15px; }
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: #fff; margin: 0; text-align: center; padding: 15px; overflow-x: hidden; }
         
         .container { max-width: 400px; margin: auto; }
-        .header h1 { color: var(--accent); margin: 10px 0 0 0; font-size: 24px; text-transform: uppercase; font-weight: 900; }
-        .header p { color: #555; font-size: 11px; margin-top: 5px; letter-spacing: 1px; }
 
+        /* --- PUSH-UP ANIMATION --- */
+        .animation-box { height: 120px; display: flex; align-items: center; justify-content: center; margin-top: 10px; }
+        .stickman { position: relative; width: 100px; height: 60px; animation: pushup 1.5s infinite ease-in-out; }
+        .head { width: 15px; height: 15px; background: white; border-radius: 50%; position: absolute; left: 70px; top: -5px; }
+        .body-line { width: 70px; height: 4px; background: white; position: absolute; top: 10px; transform: rotate(-10deg); border-radius: 5px; }
+        .arm { width: 4px; height: 25px; background: #ff0000; position: absolute; left: 55px; top: 12px; border-radius: 5px; }
+        .ground { width: 120px; height: 2px; background: #333; position: absolute; bottom: 0; }
+
+        @keyframes pushup {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(20px) rotate(5deg); }
+        }
+
+        /* --- STAT CARD --- */
         .beast-card { 
             background: linear-gradient(180deg, #1a0000, #000); 
-            padding: 35px 15px; border-radius: 30px; 
-            border: 2px solid #300; margin: 20px 0;
-            box-shadow: 0 10px 40px rgba(255,0,0,0.15);
+            padding: 25px 15px; border-radius: 30px; border: 2px solid #300; margin: 15px 0;
+            box-shadow: 0 10px 40px rgba(255,0,0,0.2);
         }
-        .day-label { font-size: 14px; color: #ff4d4d; font-weight: bold; text-transform: uppercase; }
-        .count-value { font-size: 95px; font-weight: 900; line-height: 0.9; margin: 20px 0; color: #fff; }
-        .unit { font-size: 12px; color: #888; font-weight: bold; letter-spacing: 2px; }
+        .day-label { font-size: 13px; color: #ff4d4d; font-weight: bold; text-transform: uppercase; }
+        .count-value { font-size: 90px; font-weight: 900; line-height: 0.9; margin: 10px 0; color: #fff; }
+        .unit { font-size: 11px; color: #888; font-weight: bold; letter-spacing: 2px; }
 
-        .progress-box { margin-top: 25px; }
-        .pb-bg { width: 100%; background: #222; height: 10px; border-radius: 20px; overflow: hidden; border: 1px solid #333; }
-        .pb-fill { height: 100%; background: var(--accent); width: 0%; transition: 2s ease-in-out; box-shadow: 0 0 15px var(--accent); }
-
-        .target-box { 
-            background: #0a0a0a; padding: 20px; border-radius: 25px; 
-            border: 1px solid #222; margin-top: 15px; text-align: left;
+        /* --- CHECKBOXES --- */
+        .checker-box { background: #0a0a0a; border-radius: 20px; padding: 10px; border: 1px solid #222; }
+        .checker-row { 
+            display: flex; align-items: center; justify-content: space-between; 
+            padding: 15px; border-bottom: 1px solid #1a1a1a; 
         }
-        .target-title { font-size: 12px; color: #ff4d4d; font-weight: bold; margin-bottom: 10px; }
-        .goal-item { font-size: 14px; color: #fff; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+        .checker-row:last-child { border-bottom: none; }
+        .name { font-size: 18px; font-weight: bold; letter-spacing: 1px; }
         
-        .footer { margin-top: 30px; font-size: 10px; color: #444; font-weight: bold; }
+        input[type="checkbox"] { 
+            width: 35px; height: 35px; accent-color: var(--accent); cursor: pointer;
+        }
+
+        /* --- PROGRESS --- */
+        .progress-box { margin-top: 15px; padding: 0 10px; }
+        .pb-bg { width: 100%; background: #222; height: 6px; border-radius: 10px; overflow: hidden; }
+        .pb-fill { height: 100%; background: var(--accent); width: 0%; transition: 1.5s; box-shadow: 0 0 10px var(--accent); }
+        
+        .footer { margin-top: 30px; font-size: 10px; color: #333; font-weight: bold; }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
     <div class="container">
-        <div class="header">
-            <h1>BEAST MODE ON</h1>
-            <p>දින 60 කින් ශක්තිමත් සිරුරක්</p>
+        <div class="animation-box">
+            <div class="stickman">
+                <div class="head"></div>
+                <div class="body-line"></div>
+                <div class="arm"></div>
+                <div class="ground"></div>
+            </div>
+        </div>
+
+        <div class="header" style="margin-top: -10px;">
+            <h1 style="color:red; margin:0; font-size:26px;">BEAST MODE</h1>
+            <p style="color:#555; font-size:10px; margin-top:5px;">YURESH x ISHARA 60-DAY PLAN</p>
         </div>
 
         <div class="beast-card">
-            <div class="day-label" id="day-display">DAY 1</div>
-            <div class="count-value" id="target-display">20</div>
+            <div class="day-label" id="day-display">DAY --</div>
+            <div class="count-value" id="target-display">0</div>
             <div class="unit">PUSH-UPS TODAY</div>
             
             <div class="progress-box">
                 <div class="pb-bg"><div class="pb-fill" id="pb"></div></div>
-                <div style="font-size: 11px; color: #666; margin-top: 10px;" id="prog-text">0% GAINED</div>
+                <div style="font-size: 10px; color: #666; margin-top: 8px;" id="prog-text">0% COMPLETE</div>
             </div>
         </div>
 
-        <div class="target-box">
-            <div class="target-title">අද දවසේ ඉලක්ක (GOALS)</div>
-            <div class="goal-item">🔥 පපුව පොළොවට තබා තත්පර 1ක් නවතින්න.</div>
-            <div class="goal-item">⚓ අත් දෙකේ නහර එන්න නම් වතුර ගොඩක් බොන්න.</div>
-            <div class="goal-item" id="mode-tip">🚀 අද ප්ලෑන් එක: Loading...</div>
+        <div class="checker-box">
+            <div class="checker-row">
+                <span class="name">YURESH</span>
+                <input type="checkbox" id="check-yuresh" onchange="saveStatus('yuresh')">
+            </div>
+            <div class="checker-row">
+                <span class="name">ISHARA</span>
+                <input type="checkbox" id="check-ishara" onchange="saveStatus('ishara')">
+            </div>
         </div>
 
+        <p style="font-size: 11px; color: #444; margin-top: 15px;">
+            * දිනකට ඩිෆ් 4 බැගින් ඉලක්කය වැඩි වේ.
+        </p>
+
         <div class="footer">
-            YURESH OFFICAL TRANSFORMATION SYSTEM
+            DEVELOPED BY YURESH OFFICIAL | NARAMMALA
         </div>
     </div>
 
     <script>
-        // පටන් ගත් දිනය (2026-03-25)
-        const start = new Date("2026-03-25");
+        // Challenge Start Date (YYYY-MM-DD)
+        const start = new Date("2026-03-25"); 
         const now = new Date();
         const diff = Math.floor((now - start) / (1000 * 60 * 60 * 24)) + 1;
 
-        let day = (diff > 60) ? 60 : diff;
+        // Current Day (Limit 1 to 60)
+        let day = diff;
         if (day < 1) day = 1;
+        if (day > 60) day = 60;
 
-        // පළමු දවසේ 20, දිනකට 4 බැගින් වැඩි වේ
+        // Formula: Start 20, add 4 every day
         const pushups = 20 + (day - 1) * 4;
 
         document.getElementById('day-display').innerText = "DAY " + day;
         document.getElementById('target-display').innerText = pushups;
 
-        // Progress
+        // Progress calculation
         const percent = Math.round((day / 60) * 100);
         document.getElementById('pb').style.width = percent + "%";
-        document.getElementById('prog-text').innerText = percent + "% OF TRANSFORMATION DONE";
+        document.getElementById('prog-text').innerText = percent + "% OF 60 DAYS DONE";
 
-        // නහර එන්න සහ ශක්තිමත් වෙන්න විශේෂ උපදෙස්
-        const phases = [
-            "සිරුර හුරු කරගන්න (Focus on form)",
-            "මස්පිඬු වර්ධනය (Hypertrophy phase)",
-            "ශක්තිය වැඩි කිරීම (Strength phase)",
-            "කැපී පෙනෙන මාංශපේෂී (Definition phase)",
-            "උපරිම ශක්තිය (Beast level)"
-        ];
-        const currentPhase = Math.floor(day / 12);
-        document.getElementById('mode-tip').innerText = "🚀 අද ප්ලෑන් එක: " + phases[currentPhase];
+        // Save and Load logic
+        const storageKey = "beast_mode_day_" + day;
+
+        function saveStatus(user) {
+            const isChecked = document.getElementById('check-' + user).checked;
+            localStorage.setItem(storageKey + "_" + user, isChecked);
+            if(isChecked) {
+                // සින්දුවක් වගේ ශබ්දයක් හෝ ඇලර්ට් එකක් අවශ්‍ය නම් මෙතනට දාන්න පුළුවන්
+            }
+        }
+
+        function loadStatus() {
+            document.getElementById('check-yuresh').checked = localStorage.getItem(storageKey + "_yuresh") === 'true';
+            document.getElementById('check-ishara').checked = localStorage.getItem(storageKey + "_ishara") === 'true';
+        }
+
+        window.onload = loadStatus;
     </script>
 </body>
 </html>
