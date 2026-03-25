@@ -2,174 +2,108 @@
 <html lang="si">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>YURESH AI PRO | Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>YURESH HYBRID PLAYER</title>
     <style>
-        :root { --accent: #00ff88; --bg: #000000; --card: #111111; }
-
-        /* Security: අකුරු කොපි කිරීම සහ සිලෙක්ට් කිරීම Lock කිරීම */
-        * {
-            -webkit-user-select: none;
-            user-select: none;
-            -webkit-touch-callout: none;
-            box-sizing: border-box;
-            outline: none;
-        }
-
-        body { 
-            background: var(--bg); color: #fff; font-family: 'Segoe UI', Roboto, sans-serif; 
-            margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; 
-            height: 100vh; overflow: hidden; touch-action: none;
-        }
+        :root { --accent: #ff0000; --bg: #000; }
+        * { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
+        body { background: var(--bg); color: #fff; font-family: sans-serif; margin: 0; padding: 15px; padding-bottom: 90px; }
         
-        .app-container { 
-            width: 92%; max-width: 420px; background: var(--card); 
-            border-radius: 35px; padding: 25px; border: 1px solid #222; 
-            text-align: center; box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+        .header { text-align: center; padding: 10px 0; border-bottom: 1px solid #222; margin-bottom: 15px; }
+        .header h1 { margin: 0; font-size: 22px; color: var(--accent); letter-spacing: 2px; }
+
+        .song-card { 
+            background: #111; padding: 12px; border-radius: 15px; 
+            display: flex; align-items: center; gap: 15px; margin-bottom: 10px;
+            border: 1px solid #222; cursor: pointer; transition: 0.2s;
         }
-
-        /* Balance Badge */
-        .credit-badge {
-            background: rgba(0, 255, 136, 0.1); color: var(--accent);
-            padding: 6px 16px; border-radius: 14px; font-size: 11px; font-weight: 800;
-            display: inline-block; margin-bottom: 15px; border: 1px solid rgba(0, 255, 136, 0.2);
-        }
-
-        h1 { font-size: 20px; font-weight: 900; margin: 0 0 20px 0; letter-spacing: -0.5px; }
-
-        .input-group { background: #000; border: 1px solid #222; border-radius: 20px; padding: 15px; margin-bottom: 15px; }
+        .song-card:active { border-color: var(--accent); transform: scale(0.98); }
+        .song-img { width: 55px; height: 55px; border-radius: 10px; object-fit: cover; }
         
-        /* ටයිප් කිරීමට පමණක් අවසර දීම */
-        textarea { 
-            width: 100%; height: 60px; background: none; border: none; 
-            color: #fff; outline: none; resize: none; font-size: 15px;
-            user-select: text !important; -webkit-user-select: text !important;
-        }
+        .info { flex: 1; overflow: hidden; }
+        .info div { font-size: 14px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .info span { font-size: 11px; color: #888; }
 
-        .action-btn { 
-            width: 100%; padding: 18px; border-radius: 20px; border: none; 
-            background: var(--accent); color: #000; font-weight: 800; 
-            cursor: pointer; font-size: 15px; transition: 0.2s;
-        }
-        .action-btn:disabled { background: #222; color: #555; cursor: not-allowed; }
-
-        /* Progress Bar */
-        .progress-container { 
-            width: 100%; height: 5px; background: #1a1a1a; 
-            margin-top: 20px; border-radius: 10px; display: none; overflow: hidden; 
-        }
-        .progress-bar { width: 0%; height: 100%; background: var(--accent); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        #player { display: none; }
         
-        #status-text { font-size: 10px; color: #666; margin-top: 8px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
-
-        .preview-box { 
-            width: 100%; aspect-ratio: 16/9; background: #080808; border-radius: 22px; 
-            margin-top: 15px; border: 1px solid #1a1a1a; display: flex; 
-            align-items: center; justify-content: center; position: relative; overflow: hidden;
+        .player-bar { 
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            background: #0a0a0a; padding: 15px; border-top: 1px solid #333; 
+            text-align: center; box-shadow: 0 -5px 20px rgba(0,0,0,0.8);
         }
-        
-        video { width: 100%; height: 100%; border-radius: 22px; display: none; object-fit: cover; }
+        #status { font-size: 12px; color: var(--accent); font-weight: bold; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
-    <div class="app-container">
-        <div id="creditInfo" class="credit-badge">LOADING BALANCE...</div>
-        <h1>YURESH AI PRO</h1>
-
-        <div class="input-group">
-            <textarea id="promptInp" placeholder="සිංහලෙන් විස්තර කරන්න..."></textarea>
-        </div>
-
-        <button id="genBtn" class="action-btn" onclick="startGeneration()">Generate Turbo Video ⚡</button>
-
-        <div class="progress-container" id="progCont">
-            <div class="progress-bar" id="progBar"></div>
-        </div>
-        <div id="status-text">Ready to Create</div>
-
-        <div class="preview-box">
-            <video id="videoOut" controls autoplay loop playsinline></video>
-            <div id="hintText" style="color: #1a1a1a; font-size: 12px; font-weight: 800;">VIDEO AREA</div>
-        </div>
+    <div class="header">
+        <h1>YURESH LIVE 🎵</h1>
+        <p style="font-size: 10px; color: #555;">YouTube Package එකෙන් ප්ලේ වේ</p>
     </div>
 
+    <div id="loader" style="text-align: center; padding: 50px; font-size: 13px; color: #444;">සින්දු ලෝඩ් වෙමින් පවතියි...</div>
+    <div id="list"></div>
+    <div id="player"></div>
+
+    <div class="player-bar">
+        <div id="status">සින්දුවක් තෝරන්න...</div>
+        <div style="font-size: 9px; color: #333; margin-top: 5px;">Powered by Yuresh Oficial</div>
+    </div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        // Balance එක Update කිරීම
-        async function fetchAccount() {
-            try {
-                const res = await fetch('/api/status?type=account');
-                const data = await res.json();
-                document.getElementById('creditInfo').innerText = `BALANCE: $${data.balance || '0.00'}`;
-            } catch(e) { document.getElementById('creditInfo').innerText = "BALANCE: N/A"; }
+        // ඔයාගේ API Key එක මෙන්න
+        const YT_API_KEY = 'AIzaSyBqa536TD4etKgCRCNPCwG5vje7k-sunlg'; 
+        let ytPlayer;
+
+        function onYouTubeIframeAPIReady() {
+            ytPlayer = new YT.Player('player', {
+                height: '0', width: '0', videoId: '',
+                playerVars: { 'autoplay': 1, 'controls': 0 }
+            });
         }
-        fetchAccount();
 
-        async function startGeneration() {
-            const prompt = document.getElementById('promptInp').value;
-            const btn = document.getElementById('genBtn');
-            const bar = document.getElementById('progBar');
-            const cont = document.getElementById('progCont');
-            const video = document.getElementById('videoOut');
-            const status = document.getElementById('status-text');
-            const hint = document.getElementById('hintText');
-
-            if(!prompt.trim()) return alert("සිංහලෙන් යමක් ලියන්න!");
-
-            btn.disabled = true;
-            cont.style.display = "block";
-            bar.style.width = "10%";
-            status.innerText = "Translating...";
-            video.style.display = "none";
-            hint.style.display = "none";
-
+        async function fetchSongs() {
             try {
-                // 1. Google Translation
-                const tRes = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=si&tl=en&dt=t&q=${encodeURIComponent(prompt)}`);
-                const tData = await tRes.json();
-                const englishText = tData[0][0][0] + ", realistic, 4k, smooth motion";
+                const res = await fetch('/api/songs');
+                const songs = await res.json();
+                const list = document.getElementById('list');
+                document.getElementById('loader').style.display = 'none';
 
-                bar.style.width = "30%";
-                status.innerText = "Requesting AI...";
-
-                // 2. Start Video Prediction
-                const response = await fetch("/api/generate", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ input: { prompt: englishText } })
+                songs.forEach(s => {
+                    const card = document.createElement('div');
+                    card.className = 'song-card';
+                    card.onclick = () => searchAndPlay(`${s.title} ${s.artist}`);
+                    card.innerHTML = `
+                        <img class="song-img" src="${s.img}">
+                        <div class="info"><div>${s.title}</div><span>${s.artist}</span></div>
+                        <span style="font-size: 10px; color: var(--accent);">LISTEN</span>
+                    `;
+                    list.appendChild(card);
                 });
-                const task = await response.json();
+            } catch (e) { console.error("Error!"); }
+        }
 
-                let currentProg = 30;
-                const poll = setInterval(async () => {
-                    const sRes = await fetch(`/api/status?id=${task.id}`);
-                    const sData = await sRes.json();
-
-                    if(currentProg < 92) currentProg += 4;
-                    bar.style.width = currentProg + "%";
-                    status.innerText = `Status: ${sData.status}...`;
-
-                    if(sData.status === "succeeded") {
-                        clearInterval(poll);
-                        bar.style.width = "100%";
-                        status.innerText = "Success! ✨";
-                        video.src = sData.output[0];
-                        video.style.display = "block";
-                        btn.disabled = false;
-                        fetchAccount(); // Balance එක අලුත් කිරීම
-                    } else if(sData.status === "failed") {
-                        clearInterval(poll);
-                        alert("AI Generation Failed!");
-                        btn.disabled = false;
-                        status.innerText = "Failed";
-                    }
-                }, 2500);
-
-            } catch(e) {
-                alert("Error occurred!");
-                btn.disabled = false;
+        async function searchAndPlay(query) {
+            document.getElementById('status').innerText = "සොයමින් පවතියි...";
+            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&key=${YT_API_KEY}&type=video&maxResults=1`;
+            
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                
+                if(data.items && data.items.length > 0) {
+                    const id = data.items[0].id.videoId;
+                    ytPlayer.loadVideoById(id);
+                    document.getElementById('status').innerText = "දැන් වාදනය වේ: " + query;
+                } else {
+                    document.getElementById('status').innerText = "සින්දුව හමු වූයේ නැත!";
+                }
+            } catch (err) {
+                document.getElementById('status').innerText = "සීමාව ඉක්මවා ඇත (API Limit)";
             }
         }
+        fetchSongs();
     </script>
 </body>
 </html>
