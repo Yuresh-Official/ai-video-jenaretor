@@ -4,28 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>YURESH x ISHARA BEAST MODE</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root { --accent: #ff0000; --bg: #000; --card: #111; }
-        
-        /* කොපි කිරීම සහ සිලෙක්ට් කිරීම වැලැක්වීමට */
-        * { 
-            box-sizing: border-box; 
-            font-family: 'Inter', sans-serif; 
-            -webkit-tap-highlight-color: transparent;
-            -webkit-user-select: none; /* iOS Safari */
-            -ms-user-select: none;     /* Internet Explorer/Edge */
-            user-select: none;         /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
-        }
-
-        body { 
-            background: var(--bg); 
-            color: #fff; 
-            margin: 0; 
-            text-align: center; 
-            padding: 15px; 
-            overflow-x: hidden; 
-            touch-action: pan-y; /* ඇඟිලි දෙකෙන් ලොකු කිරීම (Pinch zoom) බ්ලොක් කිරීමට */
-        }
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: #fff; margin: 0; text-align: center; padding: 15px; overflow-x: hidden; -webkit-user-select: none; user-select: none; }
         
         .container { max-width: 400px; margin: auto; }
 
@@ -52,14 +35,24 @@
         .count-value { font-size: 90px; font-weight: 900; line-height: 0.9; margin: 10px 0; color: #fff; }
         .unit { font-size: 11px; color: #888; font-weight: bold; letter-spacing: 2px; }
 
+        /* --- LEADERBOARD --- */
+        .leaderboard-box { background: #0a0a0a; border-radius: 20px; padding: 15px; border: 1px solid #222; margin-top: 20px; text-align: left; }
+        .lb-title { font-size: 14px; color: #ff4d4d; font-weight: bold; text-transform: uppercase; margin-bottom: 15px; text-align: center; letter-spacing: 2px; }
+        .lb-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 10px; border-bottom: 1px solid #1a1a1a; }
+        .lb-row:last-child { border-bottom: none; }
+        .rank { font-size: 18px; font-weight: 900; color: var(--accent); width: 30px; }
+        .name { font-size: 18px; font-weight: bold; letter-spacing: 1px; color: #fff; flex: 1; text-transform: uppercase; }
+        .score { font-size: 14px; color: #888; font-weight: bold; }
+        .score span { color: #fff; font-size: 18px; }
+
         /* --- CHECKBOXES --- */
-        .checker-box { background: #0a0a0a; border-radius: 20px; padding: 10px; border: 1px solid #222; }
+        .checker-box { background: #0a0a0a; border-radius: 20px; padding: 10px; border: 1px solid #222; margin-top: 15px; }
         .checker-row { 
             display: flex; align-items: center; justify-content: space-between; 
             padding: 15px; border-bottom: 1px solid #1a1a1a; 
         }
         .checker-row:last-child { border-bottom: none; }
-        .name { font-size: 18px; font-weight: bold; letter-spacing: 1px; }
+        .checker-row .name { font-size: 18px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
         
         input[type="checkbox"] { 
             width: 35px; height: 35px; accent-color: var(--accent); cursor: pointer;
@@ -73,7 +66,7 @@
         .footer { margin-top: 30px; font-size: 10px; color: #333; font-weight: bold; }
     </style>
 </head>
-<body oncontextmenu="return false;" onselectstart="return false;">
+<body oncontextmenu="return false;">
 
     <div class="container">
         <div class="animation-box">
@@ -112,32 +105,69 @@
             </div>
         </div>
 
+        <div class="leaderboard-box">
+            <div class="lb-title">🏆 LEADERBOARD 🏆</div>
+            <div id="lb-content">
+                </div>
+        </div>
+
+        <p style="font-size: 11px; color: #444; margin-top: 15px;">
+            * දිනකට ඩිෆ් 4 බැගින් ඉලක්කය වැඩි වේ.
+        </p>
+
         <div class="footer">
             DEVELOPED BY YURESH OFFICIAL | NARAMMALA
         </div>
     </div>
 
     <script>
-        // චැලේන්ජ් එක පටන් ගත් දිනය (මාර්තු 25)
+        // Challenge Start Date (YYYY-MM-DD)
         const start = new Date("2026-03-25"); 
         const now = new Date();
         const diff = Math.floor((now - start) / (1000 * 60 * 60 * 24)) + 1;
 
-        let day = diff < 1 ? 1 : (diff > 60 ? 60 : diff);
+        // Current Day (Limit 1 to 60)
+        let day = diff;
+        if (day < 1) day = 1;
+        if (day > 60) day = 60;
+
+        // Formula: Start 20, add 4 every day
         const pushups = 20 + (day - 1) * 4;
 
         document.getElementById('day-display').innerText = "DAY " + day;
         document.getElementById('target-display').innerText = pushups;
 
+        // Progress calculation
         const percent = Math.round((day / 60) * 100);
         document.getElementById('pb').style.width = percent + "%";
         document.getElementById('prog-text').innerText = percent + "% OF 60 DAYS DONE";
 
+        // Save and Load logic
         const storageKey = "beast_mode_day_" + day;
 
         function saveStatus(user) {
             const isChecked = document.getElementById('check-' + user).checked;
             localStorage.setItem(storageKey + "_" + user, isChecked);
+            
+            if(isChecked) {
+                // Celebration Animation
+                confetti({
+                    particleCount: 150,
+                    spread: 80,
+                    origin: { y: 0.6 }
+                });
+                
+                // Total Score එක Update කිරීම
+                let currentScore = parseInt(localStorage.getItem("beast_score_" + user)) || 0;
+                localStorage.setItem("beast_score_" + user, currentScore + 1);
+            } else {
+                // Total Score එක අඩු කිරීම (වැරදීමකින් ටික් එක දැම්මා නම්)
+                let currentScore = parseInt(localStorage.getItem("beast_score_" + user)) || 0;
+                if (currentScore > 0) {
+                    localStorage.setItem("beast_score_" + user, currentScore - 1);
+                }
+            }
+            loadLeaderboard();
         }
 
         function loadStatus() {
@@ -145,14 +175,38 @@
             document.getElementById('check-ishara').checked = localStorage.getItem(storageKey + "_ishara") === 'true';
         }
 
-        window.onload = loadStatus;
+        // Leaderboard ලෝඩ් කිරීමේ Logic
+        function loadLeaderboard() {
+            let yScore = parseInt(localStorage.getItem("beast_score_yuresh")) || 0;
+            let iScore = parseInt(localStorage.getItem("beast_score_ishara")) || 0;
+            
+            let users = [
+                { name: "YURESH", score: yScore },
+                { name: "ISHARA", score: iScore }
+            ];
+            
+            // Score එක අනුව Sort කිරීම (වැඩිම කෙනා මුලට)
+            users.sort((a, b) => b.score - a.score);
+            
+            const lbContent = document.getElementById('lb-content');
+            lbContent.innerHTML = '';
+            
+            users.forEach((user, index) => {
+                const row = document.createElement('div');
+                row.className = 'lb-row';
+                row.innerHTML = `
+                    <span class="rank">${index + 1}</span>
+                    <span class="name">${user.name}</span>
+                    <span class="score"><span>${user.score}</span> Days Done</span>
+                `;
+                lbContent.appendChild(row);
+            });
+        }
 
-        // ඇඟිලි දෙකෙන් Zoom කිරීම (Pinch) තවදුරටත් වැලැක්වීමට Script එකක්
-        document.addEventListener('touchstart', function (event) {
-            if (event.touches.length > 1) {
-                event.preventDefault();
-            }
-        }, { passive: false });
+        window.onload = function() {
+            loadStatus();
+            loadLeaderboard();
+        }
     </script>
 </body>
 </html>
